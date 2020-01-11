@@ -1,0 +1,143 @@
+<user-modal #userModal [users]="users" [modalHeaderMsg]="modalHeaderMsg" [selectedUserId]="project.userId"
+    (userModalEvent)="handleSelectedUser($event)"></user-modal>
+
+<div class="wrapper45">
+    <div class="alert {{alertClass}} alert-dismissible fade show" *ngIf="alertMessage != ''">
+        {{alertMessage}}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="project" class="col-sm-3 col-form-label"><strong>Project:</strong></label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="project" [(ngModel)]="project.project" required>
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <input id="dateCheckbox" type="checkbox" [(ngModel)]="dateChecked" (change)="setDates($event)">&nbsp;
+            <label>Set Start and End Date</label>
+            <div class="row">
+                <div class="col-sm-6">
+                    <input type="date" class="form-control" id="startDate"
+                        [ngModel]="project.startDate | date:'yyyy-MM-dd'" (ngModelChange)="project.startDate = $event"
+                        [disabled]="!dateChecked">
+                </div>
+                <div class="col-sm-6">
+                    <input type="date" class="form-control" id="endDate" [ngModel]="project.endDate | date:'yyyy-MM-dd'"
+                        (ngModelChange)="project.endDate = $event" [disabled]="!dateChecked">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="priority" class="col-sm-3 col-form-label"><strong>Priority:</strong></label>
+        <div class="col-sm-9">
+            <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+            <span class="font-weight-bold indigo-text mt-1" style="float: right;">30</span>
+            <input type="range" class="custom-range" min="0" max="30" step="1" id="priority"
+                [(ngModel)]="project.priority">
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="manager" class="col-sm-3 col-form-label"><strong>Manager:</strong></label>
+        <div class="col-sm-7">
+            <select [(ngModel)]="project.userId" class="form-control" style="width: 100%;" disabled>
+                <option [value]="usr.userId" *ngFor="let usr of users"> {{usr.firstName + ' ' + usr.lastName}}
+                </option>
+            </select>
+        </div>
+        <div class="col-sm-2 marginBottom">
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#userModal"
+                (click)="getUsers()" style="width: 100%;">Search</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="float: right;">
+                <button type="button" class="btn btn-success" *ngIf="addOperation" (click)="addProject()">Add</button>
+                <button type="button" class="btn btn-success" *ngIf="!addOperation"
+                    (click)="updateProject()">Update</button>
+                &nbsp;
+                <button type="button" class="btn btn-primary" (click)="resetProject()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="style1">
+
+    <div class="row">
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" placeholder="Search..."
+                (keyup)="search()">
+        </div>
+        <div class="col-sm-8">
+            <div style="float: right;">
+                <strong>Sort:</strong>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortProjects('SD')">Start
+                    Date</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortProjects('ED')">End Date</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortProjects('PR')">Priority</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortProjects('CO')">Completed</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="style5">
+
+    <div style="overflow-x: hidden; height: 40%;">
+        <ng-container *ngFor="let proj of projects">
+            <div *ngIf="!proj.hide">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <ul class="list-group">
+                            <li class="list-group-item">Project : {{proj.project}}</li>
+                            <li class="list-group-item list-group-item-light">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        No of Tasks : {{proj.taskCount}}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        Completed : {{proj.completeCount}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item list-group-item-light">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Start Date &nbsp;&nbsp;: {{proj.startDate | date:'yyyy-MM-dd'}}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        End Date &nbsp;&nbsp;&nbsp;: {{proj.endDate | date:'yyyy-MM-dd'}}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-2">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                Priority
+                            </li>
+                            <li class="list-group-item list-group-item-light">
+                                {{proj.priority}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-outline-success marginBottom" (click)="loadProject(proj)"
+                            style="width: 100%;">Edit</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="suspendProject(proj.projectId)"
+                            style="width: 100%;">Suspend</button>
+                    </div>
+                </div>
+                <hr class="style1">
+            </div>
+        </ng-container>
+    </div>
+</div>

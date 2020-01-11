@@ -1,0 +1,79 @@
+<project-modal #projectModal [projects]="projects" [selectedProjectId]="projectId"
+    (projectModalEvent)="handleSelectedProject($event)"></project-modal>
+
+<div class="wrapper60">
+    <div class="alert {{alertClass}} alert-dismissible fade show" *ngIf="alertMessage != ''">
+        <strong>{{alertMessage}}</strong>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                <label for="project" class="col-sm-3 col-form-label"><strong>Project:</strong></label>
+                <div class="col-sm-7">
+                    <select [(ngModel)]="projectId" class="form-control" style="width: 100%;" disabled>
+                        <option [value]="proj.projectId" *ngFor="let proj of projects">{{proj.project}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                        data-target="#projectModal" (click)="getProjects()">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div style="float: right;">
+                <strong>Sort:</strong>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortTasks('SD')">Start Date</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortTasks('ED')">End Date</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortTasks('PR')">Priority</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortTasks('CO')">Completed</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="style1">
+
+    <div class="overflow-auto" style="height: 400px;">
+        <ng-container *ngFor="let task of tasks">
+            <div *ngIf="!task.hide">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">Task</th>
+                            <th scope="col"></th>
+                            <th scope="col">Parent</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Start</th>
+                            <th scope="col">End</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td width="23%" style="background-color: mintcream;">
+                                <span>{{task.task}}</span>
+                            </td>
+                            <td width="1%"></td>
+                            <td width="23%" style="background-color: mintcream;">
+                                <span>{{task.parentTask == null ? 'NO PARENT TASK' : task.parentTask}}</span>
+                            </td>
+                            <td width="5%">{{task.priority}}</td>
+                            <td width="13%">{{task.startDate}}</td>
+                            <td width="13%">{{task.endDate}}</td>
+                            <td width="22%" align="right">
+                                <button type="button" class="btn btn-outline-success" (click)="loadTask(task)"
+                                    [disabled]="task.status == 'COMPLETE'">Edit</button>&nbsp;
+                                <button type="button" class="btn btn-outline-secondary" (click)="endTask(task)"
+                                    [disabled]="task.status == 'COMPLETE'">End
+                                    Task</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr class="style1">
+            </div>
+        </ng-container>
+    </div>
+</div>

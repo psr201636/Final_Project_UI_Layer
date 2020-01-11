@@ -1,0 +1,87 @@
+<div class="wrapper45">
+    <div class="alert {{alertClass}} alert-dismissible fade show" *ngIf="alertMessage != ''">
+        {{alertMessage}}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="firstName" class="col-sm-3 col-form-label"><strong>First Name:</strong></label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="firstName" [(ngModel)]="user.firstName" required>
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="task" class="col-sm-3 col-form-label"><strong>Last Name:</strong></label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="lastName" [(ngModel)]="user.lastName">
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="employeeId" class="col-sm-3 col-form-label"><strong>Employee ID:</strong></label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="employeeId" [(ngModel)]="user.employeeId">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="float: right;">
+                <button type="button" class="btn btn-success" *ngIf="addOperation" (click)="addUser()">Add</button>
+                <button type="button" class="btn btn-success" *ngIf="!addOperation"
+                    (click)="updateUser()">Update</button>
+                &nbsp;
+                <button type="button" class="btn btn-primary" (click)="resetUser()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="style1">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" placeholder="Search..."
+                (keyup)="search()">
+        </div>
+        <div class="col-sm-6">
+            <div style="float: right;">
+                <strong>Sort:</strong>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortUsers('FN')">First Name</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortUsers('LN')">Last Name</button>&nbsp;
+                <button type="button" class="btn btn-outline-dark" (click)="sortUsers('ID')">Id</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="style5">
+
+    <div style="overflow-x: hidden; height: 40%;">
+        <ng-container *ngFor="let usr of users">
+            <div *ngIf="!usr.hide">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                {{usr.firstName}}
+                            </li>
+                            <li class="list-group-item">
+                                {{usr.lastName}}
+                            </li>
+                            <li class="list-group-item">
+                                {{usr.employeeId}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-outline-success marginBottom" (click)="loadUser(usr)"
+                            style="width: 100%">Edit</button>
+                        <button type="button" class="btn btn-outline-danger" style="width: 100%"
+                            (click)="deleteUser(usr.userId)">Delete</button>
+                    </div>
+                </div>
+                <hr class="style1">
+            </div>
+        </ng-container>
+    </div>
+</div>

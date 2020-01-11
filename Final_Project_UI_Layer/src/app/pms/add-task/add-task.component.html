@@ -1,0 +1,112 @@
+<project-modal #projectModal [projects]="projects" [selectedProjectId]="task.projectId"
+    (projectModalEvent)="handleSelectedProject($event)"></project-modal>
+
+<parent-task-modal #parentTaskModal [parentTasks]="parentTasks" [selectedParentId]="task.parentId"
+    (parentTaskModalEvent)="handleSelectedParent($event)"></parent-task-modal>
+
+<user-modal #userModal [users]="users" [modalHeaderMsg]="modalHeaderMsg" [selectedUserId]="task.userId"
+    (userModalEvent)="handleSelectedUser($event)">
+</user-modal>
+
+<div class="wrapper45">
+    <div class="alert {{alertClass}} alert-dismissible fade show" *ngIf="alertMessage != ''">
+        {{alertMessage}}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="project" class="col-sm-3 col-form-label"><strong>Project:</strong></label>
+        <div class="col-sm-7">
+            <select [(ngModel)]="task.projectId" class="form-control" style="width: 100%;" disabled>
+                <option [value]="proj.projectId" *ngFor="let proj of projects">{{proj.project}}</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#projectModal"
+                (click)="getProjects()" style="width: 100%;" [disabled]="!addOperation">Search</button>
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="task" class="col-sm-3 col-form-label"><strong>Task:</strong></label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="task" [(ngModel)]="task.task">
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <input id="parentCheckbox" class="checkbox" type="checkbox" [value]="parentChecked"
+                (change)="setParentTask($event)">&nbsp;
+            <label class="form-check-label" for="parentCheckbox">Parent Task</label>
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="priority" class="col-sm-3 col-form-label"><strong>Priority:</strong></label>
+        <div class="col-sm-9">
+            <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+            <span class="font-weight-bold indigo-text mt-1" style="float: right;">30</span>
+            <input type="range" class="custom-range" min="0" max="30" step="1" id="priority" [(ngModel)]="task.priority"
+                [disabled]="parentChecked">    
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="project" class="col-sm-3 col-form-label"><strong>Parent Task:</strong></label>
+        <div class="col-sm-7">
+            <select [(ngModel)]="task.parentId" class="form-control" style="width: 100%;" disabled>
+                <option [value]="parent.parentId" *ngFor="let parent of parentTasks">{{parent.task}}</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-outline-primary" (click)="getParentTasks()" data-toggle="modal"
+                data-target="#parentTaskModal" [disabled]="parentChecked" style="width: 100%;">Search</button>
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <div class="col-sm-3">
+            <strong>Start Date:</strong>
+        </div>
+        <div class="col-sm-4">
+            <input type="date" class="form-control" id="startDate" [ngModel]="task.startDate | date:'yyyy-MM-dd'"
+                (ngModelChange)="task.startDate = $event" [disabled]="parentChecked">
+        </div>
+        <div class="col-sm-2">
+            <strong>End Date:</strong>
+        </div>
+        <div class="col-sm-3">
+            <input type="date" class="form-control" id="endDate" [ngModel]="task.endDate | date:'yyyy-MM-dd'"
+                (ngModelChange)="task.endDate = $event" [disabled]="parentChecked">
+        </div>
+    </div>
+
+    <div class="row marginBottom">
+        <label for="user" class="col-sm-3 col-form-label"><strong>User:</strong></label>
+        <div class="col-sm-7">
+            <select [(ngModel)]="task.userId" class="form-control" style="width: 100%;" disabled>
+                <option [value]="usr.userId" *ngFor="let usr of users"> {{usr.lastName + ', ' + usr.firstName}}
+                </option>
+            </select>
+        </div>
+        <div class="col-sm-2 marginBottom">
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#userModal"
+                (click)="getUsers()" [disabled]="parentChecked" style="width: 100%;">Search</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="float: right;">
+                <button type="button" class="btn btn-success" *ngIf="addOperation"
+                    (click)="parentChecked ? addParentTask() : addTask()">Add</button>
+                <button type="button" class="btn btn-success" *ngIf="!addOperation"
+                    (click)="updateTask()">Update</button>
+                &nbsp;
+                <button type="button" class="btn btn-primary" (click)="resetTask()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<!-- Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Select Project</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <input type="text" class="form-control" id="searchProject" [(ngModel)]="searchProject"
+                    placeholder="Search..." (keyup)="filterProject()">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Project</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let proj of projects">
+                            <tr *ngIf="!proj.hide">
+                                <td>
+                                    <div class="radio">
+                                        <input type="radio" name="projectId" [value]="proj.projectId"
+                                            [(ngModel)]="selectedProjectId">
+                                    </div>
+                                </td>
+                                <td>
+                                    {{proj.project}}
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveProjectId()" data-dismiss="modal"
+                    [disabled]="selectedProjectId == 0">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>
